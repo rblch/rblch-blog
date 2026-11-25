@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#faf9f6"/>
+  <g style="isolation: isolate">
+    <path fill="#FF48B0" d="M6,6h44A44 44 0 0 1 6,50Z"/>
+    <path fill="#0078BF" style="mix-blend-mode: multiply" d="M14,14h44A44 44 0 0 1 14,58Z"/>
+  </g>
+</svg>

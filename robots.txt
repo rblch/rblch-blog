@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /about/
+Disallow: /impressum/
+Disallow: /privacy/
+
+Sitemap: https://blog.rblch.com/sitemap-index.xml

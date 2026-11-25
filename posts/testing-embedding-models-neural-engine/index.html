@@ -1,0 +1,517 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Testing embedding models on the Mac&#39;s Neural Engine · rblch</title><meta name="description" content="Dackel needs a search model that is fast while you type, small to download and good at finding notes. I measured what each choice costs and what it buys."><meta name="theme-color" content="#faf9f6"><link rel="canonical" href="https://blog.rblch.com/posts/testing-embedding-models-neural-engine/"><link rel="alternate" type="application/rss+xml" title="rblch" href="/rss.xml"><meta property="og:site_name" content="rblch"><meta property="og:type" content="article"><meta property="og:title" content="Testing embedding models on the Mac's Neural Engine"><meta property="og:description" content="Dackel needs a search model that is fast while you type, small to download and good at finding notes. I measured what each choice costs and what it buys."><meta property="og:url" content="https://blog.rblch.com/posts/testing-embedding-models-neural-engine/"><meta property="article:published_time" content="2026-11-22T00:00:00.000Z"><meta name="twitter:card" content="summary"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/_astro/Base.CKizNLRd.css"><link rel="stylesheet" href="/_astro/testing-embedding-models-neural-engine.3mPWMrDU.css"></head><body><header class="site-header"><a class="masthead" href="/">rblch</a><nav class="site-nav"><a href="/">Writing</a><a href="/about/">About</a></nav></header><main><article class="post"><header class="post-header"><div class="meta"> Dackel · 22 Nov 2026 · 17 min read</div><h1>Testing embedding models on the Mac&#39;s Neural Engine</h1><div class="cover"><svg viewBox="0 0 240 90" aria-hidden="true"><g style="color: #0078BF"><g fill="currentColor"><circle cx="7.5" cy="11.7" r="2.6"/><circle cx="7.5" cy="22.8" r="2.6"/><circle cx="7.5" cy="33.9" r="2.6"/><circle cx="7.5" cy="45" r="2.6"/><circle cx="7.5" cy="56.1" r="2.6"/><circle cx="7.5" cy="67.2" r="2.6"/><circle cx="7.5" cy="78.3" r="2.6"/><circle cx="22.5" cy="12.49" r="2.6"/><circle cx="22.5" cy="23.32" r="2.6"/><circle cx="22.5" cy="34.16" r="2.6"/><circle cx="22.5" cy="45" r="2.6"/><circle cx="22.5" cy="55.84" r="2.6"/><circle cx="22.5" cy="66.68" r="2.6"/><circle cx="22.5" cy="77.51" r="2.6"/><circle cx="37.5" cy="13.95" r="2.6"/><circle cx="37.5" cy="24.3" r="2.6"/><circle cx="37.5" cy="34.65" r="2.6"/><circle cx="37.5" cy="45" r="2.6"/><circle cx="37.5" cy="55.35" r="2.6"/><circle cx="37.5" cy="65.7" r="2.6"/><circle cx="37.5" cy="76.05" r="2.6"/><circle cx="52.5" cy="16.18" r="2.81"/><circle cx="52.5" cy="27.71" r="2.81"/><circle cx="52.5" cy="39.24" r="2.81"/><circle cx="52.5" cy="50.76" r="2.81"/><circle cx="52.5" cy="62.29" r="2.81"/><circle cx="52.5" cy="73.82" r="2.81"/><circle cx="67.5" cy="18.65" r="2.81"/><circle cx="67.5" cy="29.19" r="2.81"/><circle cx="67.5" cy="39.73" r="2.81"/><circle cx="67.5" cy="50.27" r="2.81"/><circle cx="67.5" cy="60.81" r="2.81"/><circle cx="67.5" cy="71.35" r="2.81"/><circle cx="82.5" cy="21.73" r="3.08"/><circle cx="82.5" cy="33.37" r="3.08"/><circle cx="82.5" cy="45" r="3.08"/><circle cx="82.5" cy="56.63" r="3.08"/><circle cx="82.5" cy="68.27" r="3.08"/><circle cx="97.5" cy="24.77" r="3.08"/><circle cx="97.5" cy="34.88" r="3.08"/><circle cx="97.5" cy="45" r="3.08"/><circle cx="97.5" cy="55.12" r="3.08"/><circle cx="97.5" cy="65.23" r="3.08"/><circle cx="112.5" cy="28.28" r="3.44"/><circle cx="112.5" cy="39.43" r="3.44"/><circle cx="112.5" cy="50.57" r="3.44"/><circle cx="112.5" cy="61.72" r="3.44"/><circle cx="127.5" cy="31.43" r="3.44"/><circle cx="127.5" cy="40.48" r="3.44"/><circle cx="127.5" cy="49.52" r="3.44"/><circle cx="127.5" cy="58.57" r="3.44"/><circle cx="142.5" cy="35" r="3.97"/><circle cx="142.5" cy="45" r="3.97"/><circle cx="142.5" cy="55" r="3.97"/><circle cx="157.5" cy="37.81" r="3.97"/><circle cx="157.5" cy="45" r="3.97"/><circle cx="157.5" cy="52.19" r="3.97"/><circle cx="172.5" cy="41.17" r="4.86"/><circle cx="172.5" cy="48.83" r="4.86"/><circle cx="187.5" cy="43.2" r="4.86"/><circle cx="187.5" cy="46.8" r="4.86"/><circle cx="202.5" cy="45" r="6.88"/><circle cx="217.5" cy="45" r="6.88"/><circle cx="232.5" cy="45" r="6.88"/></g></g><g class="cover-second" style="color: #FF48B0; --register: 6px"><g transform="translate(-3 -3)"><g fill="currentColor"><circle cx="7.5" cy="11.7" r="2.6"/><circle cx="7.5" cy="22.8" r="2.6"/><circle cx="7.5" cy="33.9" r="2.6"/><circle cx="7.5" cy="45" r="2.6"/><circle cx="7.5" cy="56.1" r="2.6"/><circle cx="7.5" cy="67.2" r="2.6"/><circle cx="7.5" cy="78.3" r="2.6"/><circle cx="22.5" cy="12.49" r="2.6"/><circle cx="22.5" cy="23.32" r="2.6"/><circle cx="22.5" cy="34.16" r="2.6"/><circle cx="22.5" cy="45" r="2.6"/><circle cx="22.5" cy="55.84" r="2.6"/><circle cx="22.5" cy="66.68" r="2.6"/><circle cx="22.5" cy="77.51" r="2.6"/><circle cx="37.5" cy="13.95" r="2.6"/><circle cx="37.5" cy="24.3" r="2.6"/><circle cx="37.5" cy="34.65" r="2.6"/><circle cx="37.5" cy="45" r="2.6"/><circle cx="37.5" cy="55.35" r="2.6"/><circle cx="37.5" cy="65.7" r="2.6"/><circle cx="37.5" cy="76.05" r="2.6"/><circle cx="52.5" cy="16.18" r="2.81"/><circle cx="52.5" cy="27.71" r="2.81"/><circle cx="52.5" cy="39.24" r="2.81"/><circle cx="52.5" cy="50.76" r="2.81"/><circle cx="52.5" cy="62.29" r="2.81"/><circle cx="52.5" cy="73.82" r="2.81"/><circle cx="67.5" cy="18.65" r="2.81"/><circle cx="67.5" cy="29.19" r="2.81"/><circle cx="67.5" cy="39.73" r="2.81"/><circle cx="67.5" cy="50.27" r="2.81"/><circle cx="67.5" cy="60.81" r="2.81"/><circle cx="67.5" cy="71.35" r="2.81"/><circle cx="82.5" cy="21.73" r="3.08"/><circle cx="82.5" cy="33.37" r="3.08"/><circle cx="82.5" cy="45" r="3.08"/><circle cx="82.5" cy="56.63" r="3.08"/><circle cx="82.5" cy="68.27" r="3.08"/><circle cx="97.5" cy="24.77" r="3.08"/><circle cx="97.5" cy="34.88" r="3.08"/><circle cx="97.5" cy="45" r="3.08"/><circle cx="97.5" cy="55.12" r="3.08"/><circle cx="97.5" cy="65.23" r="3.08"/><circle cx="112.5" cy="28.28" r="3.44"/><circle cx="112.5" cy="39.43" r="3.44"/><circle cx="112.5" cy="50.57" r="3.44"/><circle cx="112.5" cy="61.72" r="3.44"/><circle cx="127.5" cy="31.43" r="3.44"/><circle cx="127.5" cy="40.48" r="3.44"/><circle cx="127.5" cy="49.52" r="3.44"/><circle cx="127.5" cy="58.57" r="3.44"/><circle cx="142.5" cy="35" r="3.97"/><circle cx="142.5" cy="45" r="3.97"/><circle cx="142.5" cy="55" r="3.97"/><circle cx="157.5" cy="37.81" r="3.97"/><circle cx="157.5" cy="45" r="3.97"/><circle cx="157.5" cy="52.19" r="3.97"/><circle cx="172.5" cy="41.17" r="4.86"/><circle cx="172.5" cy="48.83" r="4.86"/><circle cx="187.5" cy="43.2" r="4.86"/><circle cx="187.5" cy="46.8" r="4.86"/><circle cx="202.5" cy="45" r="6.88"/><circle cx="217.5" cy="45" r="6.88"/><circle cx="232.5" cy="45" r="6.88"/></g></g></g></svg></div></header><div class="prose"><p>Dackel is my Markdown notes app for the Mac. I want it to search notes by meaning: you type what you remember, not the exact words. For that it needs a text embedding model, and the model runs on the Mac, so that no note leaves the machine.</p>
+<p>Which model should that be, and how should it run? Every option trades one thing for another. A larger model is better at capturing meaning, but it needs more time and memory. A smaller model downloads and runs faster, but it may capture less of what a note means. So I shortlisted four models and set out to <mark>quantify the trade-offs.</mark></p>
+<p>The answer: Dackel’s search model will be EmbeddingGemma 2, on the Neural Engine, with 8-bit weights, reading notes in chunks of 128 tokens.</p>
+<aside class="note" style="--note-ink: var(--blue)"><p><strong>In short</strong></p><ul>
+<li><strong>The chip: the Neural Engine.</strong> It embeds a query in 11 ms, against 31 ms on the GPU and 73 ms on the CPU. The trade-off is that it runs only in half precision, float16. <a href="#which-chip">Read more</a></li>
+<li><strong>Half precision cost three of the four models no accuracy.</strong> The fourth returned wrong vectors for half of all texts, but it could be fixed. <a href="#what-does-float16-cost">Read more</a></li>
+<li><strong>The Neural Engine hides an overflow.</strong> Inside a model, a value above float16’s maximum is capped at 65,536, with no error and no NaN. Apple does not document this. <a href="#appendix-what-the-neural-engine-does-with-a-value-that-is-too-large">Read more</a></li>
+<li><strong>The model: EmbeddingGemma 2.</strong> It was the best on a synthetic vault of notes, though not on a general benchmark. <a href="#which-model">Read more</a></li>
+<li><strong>The weights: 8 bits.</strong> They halve the download, and the vectors stay close to full precision for every real note. <a href="#how-small-can-the-weights-be">Read more</a></li>
+<li><strong>The chunks: 128 tokens.</strong> A query embeds in 5 ms and search stays good. 256 was about as good, at twice the time. 64 was worse in the app and took twice as long to index. 512 is too slow. <a href="#how-long-should-a-chunk-be">Read more</a></li>
+</ul></aside>
+<details class="outline" data-astro-cid-hsztce4r><summary data-astro-cid-hsztce4r><span class="outline-label" data-astro-cid-hsztce4r>Contents</span><span class="outline-chevron" aria-hidden="true" data-astro-cid-hsztce4r></span></summary><ol data-astro-cid-hsztce4r><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>1</span><a href="#what-a-good-model-means-for-dackel" data-astro-cid-hsztce4r>What a good model means for Dackel</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>2</span><a href="#the-candidates" data-astro-cid-hsztce4r>The candidates</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>3</span><a href="#which-chip" data-astro-cid-hsztce4r>Which chip?</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>4</span><a href="#what-does-float16-cost" data-astro-cid-hsztce4r>What does float16 cost?</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>5</span><a href="#which-model" data-astro-cid-hsztce4r>Which model?</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>6</span><a href="#how-small-can-the-weights-be" data-astro-cid-hsztce4r>How small can the weights be?</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>7</span><a href="#how-long-should-a-chunk-be" data-astro-cid-hsztce4r>How long should a chunk be?</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>8</span><a href="#a-safety-net" data-astro-cid-hsztce4r>A safety net</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>9</span><a href="#the-result-in-the-app" data-astro-cid-hsztce4r>The result in the app</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>10</span><a href="#limits" data-astro-cid-hsztce4r>Limits</a></li><li data-astro-cid-hsztce4r><span class="outline-number" data-astro-cid-hsztce4r>11</span><a href="#appendix-what-the-neural-engine-does-with-a-value-that-is-too-large" data-astro-cid-hsztce4r>Appendix: what the Neural Engine does with a value that is too large</a></li></ol></details>
+<h2 id="what-a-good-model-means-for-dackel">What a good model means for Dackel</h2>
+<p>A text embedding model turns a text into a vector: a fixed list of numbers. EmbeddingGemma 2 returns 768 of them. Texts that mean similar things get vectors that point in similar directions, and search looks for the notes whose vectors point the same way as the query’s.</p>
+<figure class="figure map" data-map data-astro-cid-lawew447><div class="map-queries" role="group" aria-label="Search for" data-astro-cid-lawew447><button type="button" data-x="100" data-y="90" aria-pressed="true" data-astro-cid-lawew447>what can I cook tonight?</button><button type="button" data-x="372" data-y="70" aria-pressed="false" title="German: preparing for a trip" data-astro-cid-lawew447>Reisevorbereitung</button><button type="button" data-x="240" data-y="180" aria-pressed="false" data-astro-cid-lawew447>what did we agree in the meeting?</button></div><svg viewBox="0 0 480 236" role="img" aria-label="Nine notes shown as points in three groups, and a search query placed among them." data-astro-cid-lawew447><g class="map-note" data-note data-x="70" data-y="48" data-title="Sourdough log" data-astro-cid-lawew447><circle cx="70" cy="48" r="6" data-astro-cid-lawew447></circle><text x="81" y="51.5" data-astro-cid-lawew447>Sourdough log</text></g><g class="map-note" data-note data-x="128" data-y="78" data-title="Pasta al limone" data-astro-cid-lawew447><circle cx="128" cy="78" r="6" data-astro-cid-lawew447></circle><text x="139" y="81.5" data-astro-cid-lawew447>Pasta al limone</text></g><g class="map-note" data-note data-x="84" data-y="108" data-title="Weeknight dinners" data-astro-cid-lawew447><circle cx="84" cy="108" r="6" data-astro-cid-lawew447></circle><text x="95" y="111.5" data-astro-cid-lawew447>Weeknight dinners</text></g><g class="map-note" data-note data-x="330" data-y="44" data-title="Lisbon in May" data-astro-cid-lawew447><circle cx="330" cy="44" r="6" data-astro-cid-lawew447></circle><text x="341" y="47.5" data-astro-cid-lawew447>Lisbon in May</text></g><g class="map-note" data-note data-x="388" data-y="84" data-title="Packing list" data-astro-cid-lawew447><circle cx="388" cy="84" r="6" data-astro-cid-lawew447></circle><text x="399" y="87.5" data-astro-cid-lawew447>Packing list</text></g><g class="map-note" data-note data-x="318" data-y="106" data-title="Train tickets" data-astro-cid-lawew447><circle cx="318" cy="106" r="6" data-astro-cid-lawew447></circle><text x="329" y="109.5" data-astro-cid-lawew447>Train tickets</text></g><g class="map-note" data-note data-x="176" data-y="168" data-title="Quarterly plan" data-astro-cid-lawew447><circle cx="176" cy="168" r="6" data-astro-cid-lawew447></circle><text x="187" y="171.5" data-astro-cid-lawew447>Quarterly plan</text></g><g class="map-note" data-note data-x="252" data-y="190" data-title="Notes from Monday" data-astro-cid-lawew447><circle cx="252" cy="190" r="6" data-astro-cid-lawew447></circle><text x="263" y="193.5" data-astro-cid-lawew447>Notes from Monday</text></g><g class="map-note" data-note data-x="190" data-y="214" data-title="Release checklist" data-astro-cid-lawew447><circle cx="190" cy="214" r="6" data-astro-cid-lawew447></circle><text x="201" y="217.5" data-astro-cid-lawew447>Release checklist</text></g><circle class="map-query" data-query cx="0" cy="0" r="10" data-astro-cid-lawew447></circle></svg><p class="map-result" data-result aria-live="polite" data-astro-cid-lawew447></p><figcaption data-astro-cid-lawew447>A simplified illustration.</figcaption></figure><script type="module">for(let e of document.querySelectorAll(`[data-map]`)){let t=[...e.querySelectorAll(`button`)],n=[...e.querySelectorAll(`[data-note]`)],r=e.querySelector(`[data-query]`),i=e.querySelector(`[data-result]`),a,o=e=>{let o=Number(e.dataset.x),s=Number(e.dataset.y);for(let n of t)n.setAttribute(`aria-pressed`,String(n===e));let c=n[0],l=1/0;for(let e of n){let t=Math.hypot(Number(e.dataset.x)-o,Number(e.dataset.y)-s);t<l&&(l=t,c=e)}r.style.transform=`translate(${o}px, ${s}px)`;for(let e of n)e.classList.remove(`is-closest`);window.clearTimeout(a),a=window.setTimeout(()=>{c.classList.add(`is-closest`),i.textContent=`Closest note: ${c.dataset.title}`},700)};for(let e of t)e.addEventListener(`click`,()=>o(e));o(t[0])}</script>
+<p>Dackel downloads the model on first use, then it searches while you type, on a laptop that is doing other things. So the model has to stay within a few resource budgets. I set them by my best judgement:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Budget</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Embedding one search query</td>
+<td>at most 15 ms</td>
+</tr>
+<tr>
+<td>Memory the model adds</td>
+<td>at most 250 MB</td>
+</tr>
+<tr>
+<td>Download</td>
+<td>at most 400 MB</td>
+</tr>
+<tr>
+<td>System</td>
+<td>macOS 14, Apple silicon</td>
+</tr>
+<tr>
+<td>Languages</td>
+<td>English, German and Spanish</td>
+</tr>
+<tr>
+<td>Licence</td>
+<td>allows shipping a converted copy</td>
+</tr>
+</tbody>
+</table>
+<p>Inside those budgets, the model that finds the right note most often wins. The main metric is how often the right note comes first.</p>
+<details class="more" data-astro-cid-4xufnnom><summary data-astro-cid-4xufnnom><span class="more-chevron" aria-hidden="true" data-astro-cid-4xufnnom></span><span class="more-label" data-astro-cid-4xufnnom>The notes and queries I measured with</span></summary><div class="more-body" data-astro-cid-4xufnnom><ul>
+<li><strong>A vault of notes.</strong> 430 synthetic notes with 360 search queries, written by a language model for an invented person, in English, German and Spanish. This is the set closest to what Dackel reads.</li>
+<li><strong><a href="https://huggingface.co/datasets/google-research-datasets/xquad_r">XQuAD-R</a>.</strong> 240 Wikipedia paragraphs with 3,570 human-written questions in the same three languages. Two thirds of the questions are asked in another language than the paragraph.</li>
+<li><strong>A stress corpus.</strong> 2,894 texts in 34 scripts, built by code: long runs of one character, near-empty texts, unusual Unicode. I use it only to check the arithmetic, never to score search.</li>
+</ul><p>I split the queries once into two halves. Every choice was made on the first half, 1,953 queries. The second half, 1,977 queries, was kept back to confirm the result. All comparisons are paired, query by query.</p></div></details>
+<h2 id="the-candidates">The candidates</h2>
+<p>I took the shortlist from the multilingual retrieval leaderboard <a href="https://huggingface.co/spaces/mteb/leaderboard">MTEB</a>: the four best models of at most about 350 million parameters that meet the language and licence budgets.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>From</th>
+<th>Parameters</th>
+<th>Leaderboard, retrieval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://huggingface.co/microsoft/harrier-oss-v1-270m">harrier-oss-v1-270m</a></td>
+<td>Microsoft</td>
+<td>268M</td>
+<td>66.4</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/ibm-granite/granite-embedding-311m-multilingual-r2">granite-311m</a></td>
+<td>IBM</td>
+<td>312M</td>
+<td>65.2</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/google/embeddinggemma-2">EmbeddingGemma 2</a></td>
+<td>Google</td>
+<td>271M</td>
+<td>60.6</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/ibm-granite/granite-embedding-97m-multilingual-r2">granite-97m</a></td>
+<td>IBM</td>
+<td>97M</td>
+<td>60.3</td>
+</tr>
+</tbody>
+</table>
+<p>Two models score well above the other two. granite-97m matches EmbeddingGemma 2 at a third of the size. Plain keyword search runs along as a baseline.</p>
+<details class="more" data-astro-cid-4xufnnom><summary data-astro-cid-4xufnnom><span class="more-chevron" aria-hidden="true" data-astro-cid-4xufnnom></span><span class="more-label" data-astro-cid-4xufnnom>More details on the selection</span></summary><div class="more-body" data-astro-cid-4xufnnom><p>These models were left out:</p><ul>
+<li>jina-embeddings-v5-text-nano: its licence forbids commercial use.</li>
+<li>mSlideOn: it returns sparse vectors, and Dackel’s index stores dense ones.</li>
+<li>geevec-embeddings-1.0-lite: over the size limit, and it states no languages.</li>
+</ul><p>embeddinggemma-300m sits behind Google’s Gemma terms of use, so I left it out as well.</p><p>Harrier’s card says MIT, but the model is adapted from Gemma 3, which has its own terms. I would have had to settle that before shipping it.</p></div></details>
+<h2 id="which-chip">Which chip?</h2>
+<p>A Mac has three chips that can run the model. The CPU and the GPU calculate at full precision, float32. The Neural Engine calculates only at <a href="https://apple.github.io/coremltools/docs-guides/source/typed-execution.html">half precision</a>, float16.</p>
+<figure class="figure bars" data-bars style="--bar-ink: var(--pink)" data-astro-cid-k4wvcuxn><dl data-astro-cid-k4wvcuxn><div class="bar-row" data-astro-cid-k4wvcuxn><dt data-astro-cid-k4wvcuxn>CPU, float32</dt><dd data-astro-cid-k4wvcuxn><span class="bar" style="--size: 100%; --delay: 0s" data-astro-cid-k4wvcuxn></span><span class="bar-value" data-astro-cid-k4wvcuxn>72.6 ms</span></dd></div><div class="bar-row" data-astro-cid-k4wvcuxn><dt data-astro-cid-k4wvcuxn>GPU, float32</dt><dd data-astro-cid-k4wvcuxn><span class="bar" style="--size: 42.69972451790634%; --delay: 0.12s" data-astro-cid-k4wvcuxn></span><span class="bar-value" data-astro-cid-k4wvcuxn>31.0 ms</span></dd></div><div class="bar-row" data-astro-cid-k4wvcuxn><dt data-astro-cid-k4wvcuxn>Neural Engine, float16</dt><dd data-astro-cid-k4wvcuxn><span class="bar" style="--size: 14.876033057851243%; --delay: 0.24s" data-astro-cid-k4wvcuxn></span><span class="bar-value" data-astro-cid-k4wvcuxn>10.8 ms</span></dd></div></dl><figcaption data-astro-cid-k4wvcuxn>Time for one call of EmbeddingGemma 2 at 256 tokens (lower is better).</figcaption></figure><script type="module">var e=document.querySelectorAll(`[data-bars]`);if(`IntersectionObserver`in window){let t=new IntersectionObserver(e=>{for(let n of e)n.isIntersecting&&(n.target.classList.remove(`is-waiting`),t.unobserve(n.target))},{threshold:.4});for(let n of e)n.classList.add(`is-waiting`),t.observe(n)}</script>
+<p>All four models, at 256 tokens:</p>
+<table>
+<thead>
+<tr>
+<th>Time for one call, ms</th>
+<th>CPU</th>
+<th>GPU</th>
+<th>Neural Engine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EmbeddingGemma 2</td>
+<td>72.6</td>
+<td>31.0</td>
+<td>10.8</td>
+</tr>
+<tr>
+<td>granite-311m</td>
+<td>57.5</td>
+<td>23.4</td>
+<td>10.0</td>
+</tr>
+<tr>
+<td>harrier-270m</td>
+<td>50.7</td>
+<td>21.2</td>
+<td>6.8</td>
+</tr>
+<tr>
+<td>granite-97m</td>
+<td>16.3</td>
+<td>6.4</td>
+<td>4.0</td>
+</tr>
+</tbody>
+</table>
+<p>Against the 15 ms budget, the three larger models fit only on the Neural Engine. Only granite-97m is small enough to fit on the GPU as well.</p>
+<p>Targeting the Neural Engine has two other advantages. Float16 weights are half the size of float32 weights, on disk and in memory. And the CPU and GPU stay free for other apps running on the Mac.</p>
+<h2 id="what-does-float16-cost">What does float16 cost?</h2>
+<p>Calculating in float16 instead of float32 can damage a vector in two ways.</p>
+<ul>
+<li><strong>Loudly.</strong> The largest number float16 can hold is 65,504. Anything larger becomes infinity, and the vector fills with NaN, “not a number”. It is easy to detect.</li>
+<li><strong>Quietly.</strong> Float16 keeps about three significant digits. Rounding errors add up through the layers, and the vector comes out finite, of normal length, and pointing somewhere else. Search still returns notes, only the wrong ones.</li>
+</ul>
+<p>To detect the quiet kind of damage, the float16 vector has to be compared against a reference. So I computed every vector twice: on the Neural Engine in float16, and in PyTorch in float32 on the CPU. The cosine between the two is what I call <strong>fidelity</strong>. At 1.0 they point the same way. My rule of thumb was at least 0.99 on every single text, over 9,480 texts. So the number that counts is the fidelity of the worst text.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Largest value inside, share of float16’s maximum</th>
+<th>Fidelity, worst text</th>
+<th>Texts below 0.99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>granite-311m</td>
+<td>13%</td>
+<td>0.9988</td>
+<td>0</td>
+</tr>
+<tr>
+<td>granite-97m</td>
+<td>17%</td>
+<td>0.9986</td>
+<td>0</td>
+</tr>
+<tr>
+<td>EmbeddingGemma 2</td>
+<td>81%</td>
+<td>0.9947</td>
+<td>0</td>
+</tr>
+<tr>
+<td>harrier-270m</td>
+<td>201%</td>
+<td>0.9711</td>
+<td>4,811</td>
+</tr>
+</tbody>
+</table>
+<p>For three models, float16 cost nothing I could measure. That includes EmbeddingGemma 2, whose <a href="https://huggingface.co/google/embeddinggemma-2">model card</a> says: “Do not use float16.” Nevertheless, its margin is the thinnest of the three: its largest value is just 19% below the limit.</p>
+<p>Harrier is the exception. The Neural Engine returned no infinity and no NaN, because it cuts a value that is too large off at the limit and carries on. Every vector had a length between 0.9987 and 1.0011, where 1 is correct. <mark>Half the vectors were wrong.</mark></p>
+<p>I checked this with a few tiny models. On the Neural Engine, the step after an overflow reads the value as 65,536, however far over the limit it was, and no NaN ever appears. Apple does not document this. The measurements are in the <a href="#appendix-what-the-neural-engine-does-with-a-value-that-is-too-large">appendix</a>.</p>
+<p>However, Harrier could be fixed. Its large values sit in the running total that each layer reads from and adds to. Every read goes through a normalisation, which divides out the overall size. So I divided the total by 16. At full precision the output did not change. On the Neural Engine the worst fidelity rose from 0.9711 to 0.9995, with no text below 0.99.</p>
+<p>So float16 had no real cost, beyond the work of checking every model for quiet damage and fixing it where it shows up.</p>
+<details class="more" data-astro-cid-4xufnnom><summary data-astro-cid-4xufnnom><span class="more-chevron" aria-hidden="true" data-astro-cid-4xufnnom></span><span class="more-label" data-astro-cid-4xufnnom>What exactly gets divided</span></summary><div class="more-body" data-astro-cid-4xufnnom><p>Harrier is built from Gemma 3 layers. The running total starts as the token embeddings, is read only through a normalisation, and is written only by adding a normalisation’s output. That gives three edits to the weights, and no new operation:</p><ul>
+<li>The token embeddings are multiplied by 1/16.</li>
+<li>The gain of the two normalisations that write to the total in each layer is multiplied by 1/16.</li>
+<li>The epsilon of the normalisations that read from it is multiplied by 1/256, since it is added to a squared value.</li>
+</ul><p>The largest value inside drops from 131,781 to 8,236. At full precision the output matches the published model at a cosine of 0.9999999.</p></div></details>
+<h2 id="which-model">Which model?</h2>
+<p>All four models now run correctly on the Neural Engine, inside the speed budget. What is left is how well they search. I compared them on the first half of the queries, at full precision:</p>
+<table>
+<thead>
+<tr>
+<th>Right note first</th>
+<th>All 1,953 queries</th>
+<th>Vault of notes, 180</th>
+<th>Asked in another language than the text, 1,239</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>granite-311m</td>
+<td>83.4%</td>
+<td>63.9%</td>
+<td>82.7%</td>
+</tr>
+<tr>
+<td>EmbeddingGemma 2</td>
+<td>82.2%</td>
+<td>69.4%</td>
+<td>77.9%</td>
+</tr>
+<tr>
+<td>granite-97m</td>
+<td>79.1%</td>
+<td>45.0%</td>
+<td>78.0%</td>
+</tr>
+<tr>
+<td>harrier-270m</td>
+<td>75.8%</td>
+<td>60.6%</td>
+<td>66.2%</td>
+</tr>
+<tr>
+<td>Keyword search</td>
+<td>40.8%</td>
+<td>48.3%</td>
+<td>13.9%</td>
+</tr>
+</tbody>
+</table>
+<p>Harrier has the highest leaderboard score of the four, and here it came last: 6.4 points behind EmbeddingGemma 2.</p>
+<p>granite-97m runs the most efficiently, as expected: one call takes 4.0 ms instead of 10.8, and it needs about a quarter of the Neural Engine’s memory. Overall it gives up 3 points. On the vault of notes it gives up far more, and falls behind keyword search.</p>
+<p>The top two can’t be told apart overall: the difference of 1.2 points is within the noise. Split by where the queries come from, they go opposite ways. On questions asked in another language than the text, granite-311m is ahead by 4.8 points. On the vault of notes, EmbeddingGemma 2 is ahead by 5.5 points.</p>
+<figure class="figure bars" data-bars style="--bar-ink: var(--blue)" data-astro-cid-k4wvcuxn><dl data-astro-cid-k4wvcuxn><div class="bar-row" data-astro-cid-k4wvcuxn><dt data-astro-cid-k4wvcuxn>EmbeddingGemma 2</dt><dd data-astro-cid-k4wvcuxn><span class="bar" style="--size: 69.4%; --delay: 0s" data-astro-cid-k4wvcuxn></span><span class="bar-value" data-astro-cid-k4wvcuxn>69.4%</span></dd></div><div class="bar-row" data-astro-cid-k4wvcuxn><dt data-astro-cid-k4wvcuxn>granite-311m</dt><dd data-astro-cid-k4wvcuxn><span class="bar" style="--size: 63.9%; --delay: 0.12s" data-astro-cid-k4wvcuxn></span><span class="bar-value" data-astro-cid-k4wvcuxn>63.9%</span></dd></div><div class="bar-row" data-astro-cid-k4wvcuxn><dt data-astro-cid-k4wvcuxn>harrier-270m</dt><dd data-astro-cid-k4wvcuxn><span class="bar" style="--size: 60.6%; --delay: 0.24s" data-astro-cid-k4wvcuxn></span><span class="bar-value" data-astro-cid-k4wvcuxn>60.6%</span></dd></div><div class="bar-row" data-astro-cid-k4wvcuxn><dt data-astro-cid-k4wvcuxn>granite-97m</dt><dd data-astro-cid-k4wvcuxn><span class="bar" style="--size: 45%; --delay: 0.36s" data-astro-cid-k4wvcuxn></span><span class="bar-value" data-astro-cid-k4wvcuxn>45.0%</span></dd></div></dl><figcaption data-astro-cid-k4wvcuxn>Right note first on the vault of notes, first half of the queries (higher is better).</figcaption></figure>
+<p>That comparison ran at full precision. To validate it, I ran the models again on the second half of the queries (the held-out split). This time they ran as Dackel would ship them: on the Neural Engine, with the 8-bit weights of the next section. Overall, granite-311m had 85.1% and EmbeddingGemma 2 had 83.8%, again within the noise. On the vault of notes, EmbeddingGemma 2 had 75.6% and granite-311m had 65.6%.</p>
+<p>Dackel is a notes app, so I chose EmbeddingGemma 2.</p>
+<h2 id="how-small-can-the-weights-be">How small can the weights be?</h2>
+<p>Weights stored in 8 bits take half the space of 16-bit ones. For EmbeddingGemma 2 the model file shrinks from 276 MB to 139 MB, and the whole download comes to 283 MB.</p>
+<p>Smaller weights are a second way to fail quietly, so they need the same comparison against full precision. Search did not suffer: at 128 tokens, the 8-bit model found the right note first as often as the full-precision one, within 0.1 points. Fidelity is a different matter. The table shows the worst text at each length: the one whose 8-bit vector is furthest from its full-precision vector. It gets worse as the input gets longer:</p>
+<table>
+<thead>
+<tr>
+<th>Input length, tokens</th>
+<th>64</th>
+<th>128</th>
+<th>256</th>
+<th>512</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fidelity, worst text</td>
+<td>0.9949</td>
+<td>0.9866</td>
+<td>0.9483</td>
+<td>0.9221</td>
+</tr>
+</tbody>
+</table>
+<p>By my own rule of thumb of 0.99, that fails from 128 tokens up. At 128 it fails on exactly two texts, and both are stress texts made of nothing but zero-width spaces: invisible characters with no meaning to embed. Dackel never sends such a text to the model, since it skips notes of fewer than five words. It also removes invisible characters before embedding.</p>
+<p>Therefore, I think it is fair to conclude that 64 and 128 tokens are OK.</p>
+<h2 id="how-long-should-a-chunk-be">How long should a chunk be?</h2>
+<p>The model reads a fixed number of tokens, so notes are cut into chunks that fit. Shorter chunks make a query faster. Do they make search worse?</p>
+<p>With the model alone, on the first half of the queries, they made it better:</p>
+<table>
+<thead>
+<tr>
+<th>Chunk length, tokens</th>
+<th>64</th>
+<th>128</th>
+<th>256</th>
+<th>512</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Right note first</td>
+<td>84.0%</td>
+<td>84.1%</td>
+<td>82.2%</td>
+<td>81.5%</td>
+</tr>
+</tbody>
+</table>
+<p>512 was out in any case: one call of the model takes 28 ms there, over the budget of 15. 64 and 128 were level, and 64 is faster, so I decided on 64.</p>
+<p>Then I ran it through Dackel’s own search code. The app does not search with the model alone: keyword search runs first, and a second step adds notes found by meaning. On the vault of notes:</p>
+<table>
+<thead>
+<tr>
+<th>360 queries</th>
+<th>64 tokens</th>
+<th>128 tokens</th>
+<th>256 tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Right note first</td>
+<td>66.7%</td>
+<td>72.2%</td>
+<td>73.9%</td>
+</tr>
+<tr>
+<td>Right note in the list</td>
+<td>85.0%</td>
+<td>90.6%</td>
+<td>92.5%</td>
+</tr>
+<tr>
+<td>Embedding a query</td>
+<td>3.0 ms</td>
+<td>4.6 ms</td>
+<td>9.9 ms</td>
+</tr>
+<tr>
+<td>Indexing the vault</td>
+<td>54 s</td>
+<td>23 s</td>
+<td>24 s</td>
+</tr>
+</tbody>
+</table>
+<p>At 64 tokens the app found the right note first 7 points less often than at 256. Also, indexing took more than twice as long, because 64 tokens gives four times as many chunks as 128. I reversed the decision and went with 128.</p>
+<p>Trying to understand the disagreement between the two tables, I saw that nine in ten queries of the first are over Wikipedia paragraphs, not notes. And the first scores the model, where the second scores the app. The second is the one that counts.</p>
+<p>So I chose 128. It buys a query embedded in half the time of 256. What it costs is less certain. Against 256, 16 queries got better and 22 got worse, a difference of 1.7 points that is within the noise.</p>
+<h2 id="a-safety-net">A safety net</h2>
+<p>In the app, Dackel checks every vector the Neural Engine returns: it must be finite and of length 1, within 0.05. A vector that fails is computed again by the same model on the GPU.</p>
+<p>This catches the loud failures. I tested it with 100 failures injected on purpose, and all were recovered. But it will not catch the quiet kind of failure that I observed with Harrier.</p>
+<p>It costs about 95 MB while the GPU copy is loaded, and nothing otherwise.</p>
+<h2 id="the-result-in-the-app">The result in the app</h2>
+<p>EmbeddingGemma 2 at 128 tokens with 8-bit weights, measured in a release build of Dackel:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Budget</th>
+<th>Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory the model adds, at its peak while indexing</td>
+<td>250 MB</td>
+<td>219 to 223 MB</td>
+</tr>
+<tr>
+<td>Download</td>
+<td>400 MB</td>
+<td>283 MB</td>
+</tr>
+</tbody>
+</table>
+<p>From the last keystroke to results by meaning, a search takes 210 ms at the median:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dackel waits for you to stop typing</td>
+<td>151 ms</td>
+</tr>
+<tr>
+<td>Keyword search, and showing its results</td>
+<td>34 ms</td>
+</tr>
+<tr>
+<td>Embedding the query (budget: 15 ms)</td>
+<td>9 ms</td>
+</tr>
+<tr>
+<td>Ranking by meaning, and showing the merged results</td>
+<td>15 ms</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>210 ms</td>
+</tr>
+</tbody>
+</table>
+<details class="more" data-astro-cid-4xufnnom><summary data-astro-cid-4xufnnom><span class="more-chevron" aria-hidden="true" data-astro-cid-4xufnnom></span><span class="more-label" data-astro-cid-4xufnnom>More timings</span></summary><div class="more-body" data-astro-cid-4xufnnom><ul>
+<li>The first load after install takes 6.2 s, while the Neural Engine prepares the model. Later loads take 0.06 s.</li>
+<li>Once per install, during that preparation, the app’s memory peaks at 418 MB.</li>
+</ul></div></details>
+<h2 id="limits">Limits</h2>
+<ul>
+<li>One Mac: an M5 with 24 GB, on macOS 27. Older chips, Macs with less RAM and older versions of macOS are still unmeasured.</li>
+<li>No real vault was tested. The notes were written by a language model, and XQuAD-R may be in the models’ training data.</li>
+<li>360 queries can’t resolve differences under about 5 points in the app’s search.</li>
+<li>Energy use is unmeasured.</li>
+</ul>
+<h2 id="appendix-what-the-neural-engine-does-with-a-value-that-is-too-large">Appendix: what the Neural Engine does with a value that is too large</h2>
+<p>Float16 cannot hold a number above 65,504. Harrier produces larger numbers, and still the Neural Engine returned no infinity and no NaN. The same model in float16 in PyTorch, on the Mac’s GPU, returned NaN for all 9,480 texts. I wanted to know what the Neural Engine does differently.</p>
+<p>So I built a few tiny models. Each one does a single calculation that goes over the limit. I ran each in float16 twice, on the CPU and on the Neural Engine, and compared both with the correct result.</p>
+<h3 id="an-overflow-is-read-as-65536">An overflow is read as 65,536</h3>
+<p>The first models multiply two numbers so that the result is too large, and then scale it back down.</p>
+<table>
+<thead>
+<tr>
+<th>Calculation</th>
+<th>Correct</th>
+<th>CPU</th>
+<th>Neural Engine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>300 × 300, then × 0.25</td>
+<td>22,500</td>
+<td>infinity</td>
+<td>16,384</td>
+</tr>
+<tr>
+<td>2,000 × 2,000, then × 0.25</td>
+<td>1,000,000</td>
+<td>infinity</td>
+<td>16,384</td>
+</tr>
+<tr>
+<td>40,000 + 40,000, then × 0.5</td>
+<td>40,000</td>
+<td>infinity</td>
+<td>32,768</td>
+</tr>
+<tr>
+<td>300 × 300, then × 0, then + 7</td>
+<td>7</td>
+<td>NaN</td>
+<td>7</td>
+</tr>
+<tr>
+<td>300 × 300 as the model’s output</td>
+<td>90,000</td>
+<td>infinity</td>
+<td>infinity</td>
+</tr>
+</tbody>
+</table>
+<p>The CPU does what float16 normally does: the value becomes infinity, and a later step turns it into NaN.</p>
+<p>The Neural Engine does something else. Look at the first two rows: 16,384 is 65,536 × 0.25. The next step read the overflowed value as 65,536, whether the true value was 90,000 or 4 million. The result is a normal number, and it is wrong. No NaN ever appears. Only when the overflowed value is the model’s final output does it come out as infinity.</p>
+<h3 id="a-linear-layer-overflows-earlier">A linear layer overflows earlier</h3>
+<p>A linear layer is the most common step in these models. On the Neural Engine its output overflows at 32,768, half of float16’s maximum.</p>
+<table>
+<thead>
+<tr>
+<th>Calculation</th>
+<th>Correct</th>
+<th>CPU</th>
+<th>Neural Engine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A linear layer whose output is 30,000, then × 0.5</td>
+<td>15,000</td>
+<td>15,000</td>
+<td>15,000</td>
+</tr>
+<tr>
+<td>A linear layer whose output is 40,000, then × 0.5</td>
+<td>20,000</td>
+<td>20,000</td>
+<td>32,768</td>
+</tr>
+</tbody>
+</table>
+<p>None of the three models that passed comes near that value in a linear layer.</p>
+<h3 id="a-normalisation-is-safe-as-long-as-core-ml-recognises-it">A normalisation is safe, as long as Core ML recognises it</h3>
+<p>A normalisation squares every value, takes the mean of the squares, and divides by its square root. The squares can be far above the limit even when the values are not: 400 squared is 160,000.</p>
+<table>
+<thead>
+<tr>
+<th>Calculation</th>
+<th>CPU</th>
+<th>Neural Engine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A normalisation whose squares average 160,000</td>
+<td>all zeros</td>
+<td>correct</td>
+</tr>
+<tr>
+<td>The same, with one extra multiplication inside it</td>
+<td>all zeros</td>
+<td>all zeros</td>
+</tr>
+</tbody>
+</table>
+<p>On the CPU the squares overflow and the output is all zeros. On the Neural Engine the output is correct, because Core ML recognises the normalisation and computes it as one step. The squares never exist as float16 values. With one extra multiplication inside, Core ML no longer recognises it, and the Neural Engine returns zeros as well.</p>
+<h3 id="what-this-says-about-the-two-models">What this says about the two models</h3>
+<p><strong>Harrier.</strong> A few values in each of its vectors go over the limit. The Neural Engine reads them as 65,536, and the next normalisation hides the change in size. The vector comes out with a normal length and points the wrong way. I checked this with one more model: 6 of 512 values at 100,000, followed by a normalisation. The Neural Engine’s output matched the correct one at a cosine of 0.9987. It matched exactly what I get when I cut the values off at 65,536 by hand.</p>
+<p><strong>EmbeddingGemma 2.</strong> Inside its normalisations, the sums of squares reach 11 million, 168 times the limit. On paper that cannot work in float16. On the Neural Engine it does, because those sums never exist as float16 values.</p>
+<h3 id="why-it-matters">Why it matters</h3>
+<p>In ordinary float16, an overflow announces itself: infinity turns into NaN a step or two later. <mark>On the Neural Engine an overflow leaves no trace in the output.</mark> And the same model file gives different results on the CPU, so a test on another chip says little about the Neural Engine, in either direction.</p>
+<p>Apple does not document this. The closest description I found is Spencer Bryngelson’s independent study <a href="https://arxiv.org/abs/2606.22283">Apple Neural Engine: Architecture, Programming, and Performance</a>, which reaches the chip below Core ML and measures the M1 and the M5. My results agree with its chapter on numerics where they overlap:</p>
+<ul>
+<li>The engine “never produces a NaN anywhere”, and infinity times zero gives zero.</li>
+<li>An overflow as the output is infinity.</li>
+<li>A linear layer’s output overflows at 32,768. The study measured this on the M1, and I see it on the M5.</li>
+<li>Normalisations are operations of their own on the chip.</li>
+</ul>
+<p>Two things I measured are not in it: that a later step reads an overflowed value as 65,536, and that a normalisation stays correct when its squares exceed the limit, and stops being correct when Core ML no longer recognises it.</p>
+<p>What I measured is one M5 Mac on macOS 27, through Core ML, with each calculation on its own and not inside the full models.</p></div><footer class="post-footer"><a href="/">← All writing</a></footer></article></main><footer class="site-footer"><span>rblch</span><nav><a href="/rss.xml">RSS</a><a href="/privacy/">Privacy</a><a href="/impressum/">Impressum</a></nav></footer></body></html>
